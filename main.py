@@ -37,9 +37,14 @@ class Window(object):
         self.score = 0
 
     def addApple(self):
-        rand_x = random.randint(0, 21)
-        rand_y = random.randint(0, 21)
-        apple = (rand_x, rand_y)
+        apple = ()
+        while apple == ():
+            rand_x = random.randint(0, 21)
+            rand_y = random.randint(0, 21)
+            apple = (rand_x, rand_y)
+            if apple in snake.positions or apple in self.apples:
+                apple = ()
+                print('Failed apple')
         self.apples.append(apple)
 
     def drawScreen(self):
@@ -61,11 +66,11 @@ class Window(object):
     def gameOver(self):
 
         # score
-        self.screen.blit(self.font2.render('GAME OVER' if win.score < 900 else 'WELL DONE', True, RED if win.score < 900 else GOLD), (150, 250))
-        self.screen.blit(self.font1.render(f'Score: {self.score}', True, RED if win.score < 900 else GOLD), (250, 320))
+        self.screen.blit(self.font2.render('GAME OVER' if win.score < 899 else 'WELL DONE', True, RED if win.score < 899 else GOLD), (150, 250))
+        self.screen.blit(self.font1.render(f'Score: {self.score}', True, RED if win.score < 899 else GOLD), (250, 320))
 
         #      restart button
-        pygame.draw.rect(win.screen, RED if win.score < 900 else GOLD, (200, 375, 200, 50))
+        pygame.draw.rect(win.screen, RED if win.score < 899 else GOLD, (200, 375, 200, 50))
         self.screen.blit(self.font1.render(f'RESTART', True, WHITE), (245, 385))
 
     def checkRestart(self, x, y):
