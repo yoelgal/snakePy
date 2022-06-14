@@ -7,7 +7,7 @@ RED = (255, 0, 0)
 CYAN = (0, 255, 255)
 GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
-BLUE = (0,0,255)
+BLUE = (0, 0, 255)
 GOLD = (255, 215, 0)
 
 # GAME PARAMS
@@ -39,8 +39,8 @@ class Window(object):
     def addApple(self):
         apple = ()
         while apple == ():
-            rand_x = random.randint(0, 21)
-            rand_y = random.randint(0, 21)
+            rand_x = random.randint(0, 30)
+            rand_y = random.randint(0, 30)
             apple = (rand_x, rand_y)
             if apple in snake.positions or apple in self.apples:
                 apple = ()
@@ -66,7 +66,9 @@ class Window(object):
     def gameOver(self):
 
         # score
-        self.screen.blit(self.font2.render('GAME OVER' if win.score < 899 else 'WELL DONE', True, RED if win.score < 899 else GOLD), (150, 250))
+        self.screen.blit(
+            self.font2.render('GAME OVER' if win.score < 899 else 'WELL DONE', True, RED if win.score < 899 else GOLD),
+            (150, 250))
         self.screen.blit(self.font1.render(f'Score: {self.score}', True, RED if win.score < 899 else GOLD), (250, 320))
 
         #      restart button
@@ -88,12 +90,11 @@ class Window(object):
 
 class Snake(object):
     def __init__(self):
-        self.positions = [(15, 15)]
+        self.positions = [(15,15)]
 
 
 win = Window()
 snake = Snake()
-
 
 clock = pygame.time.Clock()
 
@@ -127,22 +128,22 @@ while running:
 
             if e.type == pygame.KEYDOWN:
                 # right key
-                if e.key == pygame.K_RIGHT:
+                if e.key == pygame.K_d or e.key == pygame.K_RIGHT:
                     if win.direction != 'L':
                         win.direction = 'R'
 
                     # left key
-                elif e.key == pygame.K_LEFT:
+                elif e.key == pygame.K_a or e.key == pygame.K_LEFT:
                     if win.direction != 'R':
                         win.direction = 'L'
 
                     # UP key
-                elif e.key == pygame.K_UP:
+                elif e.key == pygame.K_w or e.key == pygame.K_UP:
                     if win.direction != 'D':
                         win.direction = 'U'
 
                     # DOWN key
-                elif e.key == pygame.K_DOWN:
+                elif e.key == pygame.K_s or e.key == pygame.K_DOWN:
                     if win.direction != 'U':
                         win.direction = 'D'
         elif game_over:
@@ -153,8 +154,22 @@ while running:
                 win.restart()
 
     for pos in snake.positions:
-        if snake.positions.count(pos) > 1 or (pos[0] < 0 or pos[0] > 30 or pos[1] < 0 or pos[1] > 30):
+        # if snake.positions.count(pos) > 1 or (pos[0] < 0 or pos[0] > 30 or pos[1] < 0 or pos[1] > 30):
+        if snake.positions.count(pos) > 1:
             game_over = True
+        #     optional game logic: no borders
+        if pos[0] < 0:
+            loc = snake.positions.index(pos)
+            snake.positions[loc] = (30, pos[1])
+        if pos[0] > 29:
+            loc = snake.positions.index(pos)
+            snake.positions[loc] = (0, pos[1])
+        if pos[1] < 0:
+            loc = snake.positions.index(pos)
+            snake.positions[loc] = (pos[0], 29)
+        if pos[1] > 29:
+            loc = snake.positions.index(pos)
+            snake.positions[loc] = (pos[0], 0)
 
     win.screen.fill(BLACK)
 
